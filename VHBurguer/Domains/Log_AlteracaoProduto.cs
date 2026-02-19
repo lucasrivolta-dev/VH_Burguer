@@ -9,9 +9,9 @@ public partial class Log_AlteracaoProduto
 
     public DateTime DataAlteracao { get; set; }
 
-    public string NomeAnterior { get; set; } = null!;
+    public string? NomeAnterior { get; set; }
 
-    public decimal PrecoAnterior { get; set; }
+    public decimal? PrecoAnterior { get; set; }
 
     public int? ProdutoID { get; set; }
 

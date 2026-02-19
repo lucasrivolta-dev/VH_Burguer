@@ -5,11 +5,21 @@ namespace VHBurguer.Interfaces
     public interface IUsuarioRepository
     {
         List<Usuario> Listar();
-        Usuario? ObterPorId(int id);
+
+        // pode ser que não venha nenhum usuário na busca, 
+        // então colocamos "?"
+        Usuario? ObterPorId(int id); 
+
         Usuario? ObterPorEmail(string email);
+
         bool EmailExiste(string email);
+
         void Adicionar(Usuario usuario);
+
         void Atualizar(Usuario usuario);
+
         void Remover(int id);
+
+
     }
 }

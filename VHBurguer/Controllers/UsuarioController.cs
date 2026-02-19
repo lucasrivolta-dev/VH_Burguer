@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VHBurguer.Applications.Services;
-using VHBurguer.DTOs.Usuario;
+using VHBurguer.DTOs.UsuarioDto;
 using VHBurguer.Exceptions;
+
 
 namespace VHBurguer.Controllers
 {
@@ -17,58 +18,51 @@ namespace VHBurguer.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        // GET -> lista informações
+        [HttpGet] 
         public ActionResult<List<LerUsuarioDto>> Listar()
         {
             List<LerUsuarioDto> usuarios = _service.Listar();
-            return Ok(usuarios); // Retorna 200 OK com a lista de usuários
+
+            // retorna a lista de usuários, a partir da DTO de Services
+            return Ok(usuarios); // OK - 200 - DEU CERTO
         }
 
         [HttpGet("{id}")]
         public ActionResult<LerUsuarioDto> ObterPorId(int id)
         {
-           LerUsuarioDto usuario = _service.ObterPorId(id);
-            if(usuario == null)
+            LerUsuarioDto usuario = _service.ObterPorId(id);
+
+            if (usuario == null)
             {
-                return NotFound();
+                return NotFound(); // NÃO ENCONTRADO - StatusCode 404
             }
 
             return Ok(usuario);
         }
 
-        [HttpGet("email/{email}")]
+        [HttpGet("email/{email}")] 
         public ActionResult<LerUsuarioDto> ObterPorEmail(string email)
         {
             LerUsuarioDto usuario = _service.ObterPorEmail(email);
+
             if (usuario == null)
             {
                 return NotFound();
             }
+
             return Ok(usuario);
         }
 
-        [HttpPost]
+        // POST - Envia dados 
+        [HttpPost] 
         public ActionResult<LerUsuarioDto> Adicionar(CriarUsuarioDto usuarioDto)
         {
             try
             {
                 LerUsuarioDto usuarioCriado = _service.Adicionar(usuarioDto);
-                return StatusCode(201, usuarioCriado); // Retorna 201 Created com o usuário criado
-            }
 
-            catch (DomainException ex)
-            {
-                return BadRequest(ex.Message); 
-            }
-        }
-         
-        [HttpPut("{id}")]
-        public ActionResult<LerUsuarioDto> Atualizar(int id, CriarUsuarioDto usuarioDto)
-        {
-            try
-            {
-                LerUsuarioDto usuarioAtualizado = _service.Atualizar(id, usuarioDto);
-                return StatusCode(200, usuarioAtualizado); // Retorna 200 OK com o usuário atualizado
+                return StatusCode(201, usuarioCriado);
             }
             catch (DomainException ex)
             {
@@ -76,18 +70,37 @@ namespace VHBurguer.Controllers
             }
         }
 
-           [HttpDelete("{id}")]
-           public ActionResult Remover(int id)
-           {
-               try
-               {
-                   _service.Remover(id);
-                   return NoContent(); // Retorna 204 No Content para indicar que a exclusão foi bem-sucedida
-               }
-               catch (DomainException ex)
-               {
-                   return BadRequest(ex.Message);
-               }
+        // Realiza alterações de todos os dados
+        [HttpPut("{id}")]
+        public ActionResult<LerUsuarioDto> Atualizar(int id, CriarUsuarioDto usuarioDto)
+        {
+            try
+            {
+                LerUsuarioDto usuarioAtualizado = _service.Atualizar(id, usuarioDto);
+
+                return StatusCode(200, usuarioAtualizado);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Remove os dados
+        // no nosso banco o delete vai inativar o usuário
+        // por conta da trigger (processo chamado de soft delete)
+        [HttpDelete("{id}")]
+        public ActionResult Remover(int id)
+        {
+            try
+            {
+                _service.Remover(id);
+                return NoContent();
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -3,8 +3,7 @@ using VHBurguer.Contexts;
 using VHBurguer.Domains;
 using VHBurguer.Interfaces;
 
-
-namespace VHBurguerOFC.Repositories
+namespace VHBurguer.Repositories
 {
     public class ProdutoRepository : IProdutoRepository
     {
@@ -18,29 +17,37 @@ namespace VHBurguerOFC.Repositories
         public List<Produto> Listar()
         {
             List<Produto> produtos = _context.Produto
-                .Include(produto => produto.Categoria) //busca produtos e para cada produto tras as suas categorias
-                .Include(produto => produto.Usuario) //busca produtos e para cada produto, traz seus usuarios
+                .Include(produto => produto.Categoria) // busca produtos e para cada produto, traz as suas categorias
+                .Include(produto => produto.Usuario) // busca produtos e para cada produto, traz as seus usuários
                 .ToList();
 
             return produtos;
         }
-        public Produto ObterPorId(int id)
+
+        public Produto ObterPorId(int id) // id = 5 -> Sorvete
         {
             Produto? produto = _context.Produto
                 .Include(produtoDb => produtoDb.Categoria)
                 .Include(produtoDb => produtoDb.Usuario)
+
+                // Procura no banco (aux produtoDb) e verifica se o ID do produto no banco é igual ao id passado como parâmetro no método ObterPorId
                 .FirstOrDefault(produtoDb => produtoDb.ProdutoID == id);
+
             return produto;
         }
 
         public bool NomeExiste(string nome, int? produtoIdAtual = null)
         {
+            // AsQueryable() -> Monta a consulta para executar passo a passo
+            // monta a consulta na tabela produto
+            // não executa nada no banco ainda
             var produtoConsultado = _context.Produto.AsQueryable();
 
-            if (produtoIdAtual.HasValue)
+            // Se o produto atual tiver valor, então atualizamos o produto
+
+            if(produtoIdAtual.HasValue)
             {
-                produtoConsultado = produtoConsultado.Where(produto =>
-                   produto.ProdutoID != produtoIdAtual.Value);
+                produtoConsultado = produtoConsultado.Where(produto => produto.ProdutoID != produtoIdAtual.Value);
             }
 
             return produtoConsultado.Any(produto => produto.Nome == nome);
@@ -56,26 +63,25 @@ namespace VHBurguerOFC.Repositories
             return produto;
         }
 
-        public void Adicionar(Produto produto,List<int> categoriaIds)
+        public void Adicionar(Produto produto, List<int> categoriaIds)
         {
             List<Categoria> categorias = _context.Categoria
                 .Where(categoria => categoriaIds.Contains(categoria.CategoriaID))
-                .ToList();
+                .ToList(); // Contains -> retorna true se houver o registro
 
-            produto.Categoria = categorias;
+            produto.Categoria = categorias; // adiciona as categorias incluidas ao produto
 
-            _context.SaveChanges();
             _context.Produto.Add(produto);
+            _context.SaveChanges();
         }
 
         public void Atualizar(Produto produto, List<int> categoriaIds)
         {
-            Produto produtoBanco = _context.Produto
+            Produto? produtoBanco = _context.Produto
                 .Include(produto => produto.Categoria)
-                .FirstOrDefault(produto => produto.ProdutoID == 
-                produto.ProdutoID);
+                .FirstOrDefault(produtoAux => produtoAux.ProdutoID == produto.ProdutoID);
 
-            if(produtoBanco != null)
+            if(produtoBanco == null)
             {
                 return;
             }
@@ -84,42 +90,45 @@ namespace VHBurguerOFC.Repositories
             produtoBanco.Preco = produto.Preco;
             produtoBanco.Descricao = produto.Descricao;
 
-            if (produto.Imagem != null && produto.Imagem.Length > 0)
+            if(produto.Imagem != null && produto.Imagem.Length > 0)
             {
                 produtoBanco.Imagem = produto.Imagem;
             }
 
-            if(produto.StatusProduto.HasValue)
+            if (produto.StatusProduto.HasValue)
             {
                 produtoBanco.StatusProduto = produto.StatusProduto;
             }
 
+            // busca todas as categorias no banco com o id igual das categorias que vieram da requisição/front
             var categorias = _context.Categoria
                 .Where(categoria => categoriaIds.Contains(categoria.CategoriaID))
                 .ToList();
 
+            // Clear() -> Remove as ligações atuais entre o produto e as categorias
+            // ele não apaga a categoria do banco, só remove o vínculo com a tabela ProdutoCategoria
             produtoBanco.Categoria.Clear();
 
-            foreach (var categoria in categorias)
+            foreach(var categoria in categorias)
             {
                 produtoBanco.Categoria.Add(categoria);
             }
 
             _context.SaveChanges();
-        }
+        } 
 
         public void Remover(int id)
         {
-            Produto produto = _context.Produto.FirstOrDefault(produto =>
-                produto.ProdutoID == id);
+            Produto? produto = _context.Produto.FirstOrDefault(produto => produto.ProdutoID == id);
 
-            if (produto != null)
+            if(produto == null)
             {
                 return;
             }
 
             _context.Produto.Remove(produto);
-                _context.SaveChanges();
+            _context.SaveChanges();
         }
+
     }
 }

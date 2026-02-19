@@ -1,5 +1,51 @@
 [
   {
+    "ContainingType": "VHBurguer.Controllers.ProdutoController",
+    "Method": "Listar",
+    "RelativePath": "api/Produto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[VHBurguer.DTOs.ProdutoDto.LerProdutoDto, VHBurguer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "VHBurguer.Controllers.ProdutoController",
+    "Method": "ObterPorId",
+    "RelativePath": "api/Produto/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "VHBurguer.DTOs.ProdutoDto.LerProdutoDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "VHBurguer.Controllers.UsuarioController",
     "Method": "Listar",
     "RelativePath": "api/Usuario",
@@ -9,7 +55,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[VHBurguer.DTOs.LerUsuarioDto, VHBurguer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[VHBurguer.DTOs.UsuarioDto.LerUsuarioDto, VHBurguer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -29,13 +75,13 @@
     "Parameters": [
       {
         "Name": "usuarioDto",
-        "Type": "VHBurguer.DTOs.CriarUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.CriarUsuarioDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "VHBurguer.DTOs.LerUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.LerUsuarioDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -61,7 +107,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "VHBurguer.DTOs.LerUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.LerUsuarioDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -86,13 +132,13 @@
       },
       {
         "Name": "usuarioDto",
-        "Type": "VHBurguer.DTOs.CriarUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.CriarUsuarioDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "VHBurguer.DTOs.LerUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.LerUsuarioDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -134,7 +180,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "VHBurguer.DTOs.LerUsuarioDto",
+        "Type": "VHBurguer.DTOs.UsuarioDto.LerUsuarioDto",
         "MediaTypes": [
           "text/plain",
           "application/json",

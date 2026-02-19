@@ -1,4 +1,4 @@
-﻿namespace VHBurguerOFC.DTOs.ProdutoDTO
+﻿namespace VHBurguer.DTOs.ProdutoDto
 {
     public class LerProdutoDto
     {
@@ -12,11 +12,13 @@
 
         public bool? StatusProduto { get; set; }
 
-        // Categorias
-        public List<int> CategoriasIds { get; set; } = new();
+        // categorias
+        public List<int> CategoriaIds { get; set; } = new();
         public List<string> Categorias { get; set; } = new();
 
+
         // usuario que cadastrou
+
         public int? UsuarioID { get; set; }
         public string? UsuarioNome { get; set; }
         public string? UsuarioEmail { get; set; }
